@@ -1,9 +1,22 @@
-
-
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+import 'layout.dart';
 
 class LogoPage extends StatelessWidget {
+
   const LogoPage({super.key});
+
+
+  Future<void> completeOnboarding(BuildContext context) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool('seenOnboarding', true);
+
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (_) =>  Layout()),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -76,7 +89,7 @@ class LogoPage extends StatelessWidget {
 
                    SizedBox(
                       width: 300,
-                     child: ElevatedButton(onPressed: (){},
+                     child: ElevatedButton(onPressed: () => completeOnboarding(context) ,
                         style: ElevatedButton.styleFrom(
                             backgroundColor: Colors.white,
                             shape: RoundedRectangleBorder(

@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import 'package:registration_ieee/views/layout.dart';
 import 'package:registration_ieee/views/logo_page.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
 
 class Splash extends StatefulWidget {
   const Splash({super.key});
@@ -13,22 +16,27 @@ class _SplashState extends State<Splash> {
   @override
   void initState() {
     super.initState();
-    Future.delayed(
-      const Duration(seconds: 4),
-          () {
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => LogoPage()),
-        );
-      },
-    );
+    Future.delayed(const Duration(seconds: 4), () {
+      checkOnboarding(context);
+    });
   }
+
+
+  void checkOnboarding(BuildContext context) async {
+    final prefs = await SharedPreferences.getInstance();
+    final seenOnboarding = prefs.getBool('seenOnboarding') ?? false;
+
+    if (seenOnboarding) {
+      Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => Layout()));
+    } else {
+      Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => LogoPage()));
+    }
+  }
+
 
   @override
   Widget build(BuildContext c) {
-    return  MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home : Scaffold(
+    return  Scaffold(
         body: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -41,8 +49,7 @@ class _SplashState extends State<Splash> {
                 ],
                 child: Image.asset(
                   'assets/qr.png',
-                  color: Colors.blue[900],
-                  width: 230,
+                width: 230,
                   height: 230,
                 ),
               ),
@@ -66,7 +73,6 @@ class _SplashState extends State<Splash> {
             ],
           ),
         ),
-      ),
     );
   }
 }
